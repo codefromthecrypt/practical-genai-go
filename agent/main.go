@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/codefromthecrypt/practical-genai-go/agent/agent"
-	"github.com/codefromthecrypt/practical-genai-go/agent/tools"
 	"log"
-	"reflect"
+
+	"github.com/codefromthecrypt/practical-genai-go/agent/agent"
+	"github.com/codefromthecrypt/practical-genai-go/agent/dev"
 )
 
 func main() {
@@ -13,11 +13,7 @@ func main() {
 	model := "qwen2.5:7b"
 
 	// Initialize the agent and give it access to certain functions.
-	a, err := agent.New(url, model, tools.SystemPrompt, tools.Source, map[string]reflect.Value{
-		"shell":      reflect.ValueOf(tools.Shell),
-		"read_file":  reflect.ValueOf(tools.ReadFile),
-		"write_file": reflect.ValueOf(tools.WriteFile),
-	})
+	a, err := agent.New(url, model, dev.AgentConfig)
 	if err != nil {
 		log.Panicln("😡:", err)
 	}
@@ -25,8 +21,9 @@ func main() {
 	// Ask the agent to do something that requires poking around the machine.
 	// This could be solved multiple ways given the functions we've allowed.
 	reply, err := a.Request(
-		"Write a file in the current directory named README.md. " +
-			"In that, make a heading called 'Parakeet examples' which includes a markdown link to and short description of each top-level directory.")
+		"Analyze each top-level directory in the current working directory." +
+			"Make a new file named README.md which describes each under the " +
+			"heading 'Parakeet examples'.")
 	if err != nil {
 		log.Fatal("😡:", err)
 	}
