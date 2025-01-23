@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"strings"
 
 	"github.com/codefromthecrypt/practical-genai-go/agent/agent"
 )
@@ -31,6 +32,7 @@ var tools = map[string]reflect.Value{
 	"shell":      reflect.ValueOf(Shell),
 	"read_file":  reflect.ValueOf(ReadFile),
 	"write_file": reflect.ValueOf(WriteFile),
+	"patch_file": reflect.ValueOf(PatchFile),
 }
 
 // getLanguage determines the language type from the file path.
@@ -117,4 +119,48 @@ func WriteFile(path string, content string) (string, error) {
 	}
 
 	return fmt.Sprintf("Successfully wrote to %s", path), nil
+}
+
+// PatchFile patches the file at the specified path by replacing before with
+// after.
+//
+// Before must be present exactly once in the file, so that it can safely
+// be replaced with after.
+//
+// Parameters:
+//   - path: The path to the file, in the format "path/to/file.txt"
+//   - before: The content that will be replaced
+//   - after: The content it will be replaced with
+func PatchFile(path, before, after string) (string, error) {
+	log.Printf("Patching file: %s\n", path)
+
+	expandedPath, err := filepath.Abs(path)
+	if err != nil {
+		return "", fmt.Errorf("failed to expand path: %w", err)
+	}
+
+	content, err := os.ReadFile(expandedPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to read file: %w", err)
+	}
+
+	contentStr := string(content)
+	if count := strings.Count(contentStr, before); count > 1 {
+		return "", fmt.Errorf("the before content is present multiple times in " +
+			"the file, be more specific")
+	} else if count < 1 {
+		return "", fmt.Errorf("the before content was not found in file, be " +
+			"careful that you recreate it exactly")
+	}
+
+	contentStr = strings.Replace(contentStr, before, after, 1)
+	if err := os.WriteFile(expandedPath, []byte(contentStr), 0o644); err != nil {
+		return "", fmt.Errorf("failed to write file: %w", err)
+	}
+
+	language := getLanguage(path)
+	md := fmt.Sprintf("```%s\n%s\n```\n->\n```%s\n%s\n```", language, before, language, after)
+	log.Println(md)
+
+	return "Successfully replaced before with after.", nil
 }

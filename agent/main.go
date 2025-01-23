@@ -32,8 +32,8 @@ func main() {
 
 	// Since the agent is stateful, it will remember the last thing it did. It
 	// can revise or do something related to it without restating context.
-	reply, err = a.Request("Append a thank you to GopherCon Singapore to the " +
-		"bottom of that file, in Singlish.")
+	reply, err = a.Request("Add a thank you to GopherCon Singapore to the " +
+		"bottom of that file as a new section. Write it in Singlish.")
 	if err != nil {
 		log.Fatal("😡:", err)
 	}
