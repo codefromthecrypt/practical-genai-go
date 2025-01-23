@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"fmt"
 	"github.com/codefromthecrypt/practical-genai-go/agent/agent"
 	"github.com/codefromthecrypt/practical-genai-go/agent/tools"
@@ -9,15 +8,12 @@ import (
 	"reflect"
 )
 
-//go:embed tools/tools.go
-var toolSource string
-
 func main() {
 	url := "http://localhost:11434"
 	model := "qwen2.5:7b"
 
 	// Initialize the agent and give it access to certain functions.
-	a, err := agent.New(url, model, toolSource, map[string]reflect.Value{
+	a, err := agent.New(url, model, tools.SystemPrompt, tools.Source, map[string]reflect.Value{
 		"shell":      reflect.ValueOf(tools.Shell),
 		"read_file":  reflect.ValueOf(tools.ReadFile),
 		"write_file": reflect.ValueOf(tools.WriteFile),
