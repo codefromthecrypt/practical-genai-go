@@ -13,7 +13,7 @@ import (
 // performing operations so you don't have to.
 //
 // This agent was written to be easy to explain in a conference, so it doesn't
-// do anything fancy. Real agents are more than just an LLM a good system
+// do anything fancy. Real agents are more than just an LLM, a good system
 // prompt and a few tools.
 //
 // For example, https://github.com/block/goose includes a plugin system,
