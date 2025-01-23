@@ -46,11 +46,12 @@ type Agent struct {
 // of lower_snake_case function name to reflect.Value of the exported function
 // that exists in toolsSource. All functions must return string and an error
 // result.
-func New(url, model string, toolSource string, fns map[string]reflect.Value) (*Agent, error) {
+func New(url, model, systemPrompt, toolSource string, fns map[string]reflect.Value) (*Agent, error) {
 	a := &Agent{
 		ollamaURL: url,
 		q: &llm.Query{
-			Model: model,
+			Model:    model,
+			Messages: []llm.Message{{Role: "system", Content: systemPrompt}},
 		},
 		goFuncs: map[string]struct {
 			fn         reflect.Value
