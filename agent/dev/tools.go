@@ -1,7 +1,7 @@
-// Package tools copies and ports a few aspects from block/goose, which is a
+// Package dev copies and ports a few aspects from block/goose, which is a
 // robust system agent written in Python and Rust, by some pretty awesome
 // people. https://github.com/square/goose
-package tools
+package dev
 
 import (
 	_ "embed"
@@ -10,13 +10,28 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"reflect"
+
+	"github.com/codefromthecrypt/practical-genai-go/agent/agent"
 )
 
-//go:embed prompt.md
-var SystemPrompt string
+var AgentConfig = &agent.Config{
+	SystemPrompt: systemPrompt,
+	ToolSource:   toolSource,
+	Tools:        tools,
+}
+
+//go:embed system_prompt.md
+var systemPrompt string
 
 //go:embed tools.go
-var Source string
+var toolSource string
+
+var tools = map[string]reflect.Value{
+	"shell":      reflect.ValueOf(Shell),
+	"read_file":  reflect.ValueOf(ReadFile),
+	"write_file": reflect.ValueOf(WriteFile),
+}
 
 // getLanguage determines the language type from the file path.
 func getLanguage(path string) string {
@@ -54,7 +69,7 @@ func Shell(command string) (string, error) {
 // Parameters:
 //   - path: The path to the file, in the format "path/to/file.txt"
 func ReadFile(path string) (string, error) {
-	log.Printf("Reading file: %s", path)
+	log.Printf("Reading file: %s\n", path)
 
 	expandedPath, err := filepath.Abs(path)
 	if err != nil {
@@ -81,7 +96,7 @@ func ReadFile(path string) (string, error) {
 //   - path: The destination file path, in the format "path/to/file.txt"
 //   - content: The raw file content.
 func WriteFile(path string, content string) (string, error) {
-	log.Printf("Writing file: %s", path)
+	log.Printf("Writing file: %s\n", path)
 
 	// Get the programming language for syntax highlighting in logs
 	language := getLanguage(path)
