@@ -8,6 +8,18 @@ import (
 	"github.com/codefromthecrypt/practical-genai-go/agent/dev"
 )
 
+// main shows an agent can perform tasks for you, including figuring out which
+// tools to use. Notably, an agent isn't just retrieving information, it is
+// performing operations so you don't have to.
+//
+// This agent was written to be easy to explain in a conference, so it doesn't
+// do anything fancy. Real agents are more than just an LLM a good system
+// prompt and a few tools.
+//
+// For example, https://github.com/block/goose includes a plugin system,
+// context summarization, robust LLM handling, and work in progress towards
+// Model Context Protocol (MCP), which decouples tool, prompt and resource
+// definitions from the agents that use them.
 func main() {
 	url := "http://localhost:11434"
 	model := "qwen2.5:7b"
