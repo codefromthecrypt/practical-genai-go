@@ -23,14 +23,6 @@ func (a *Agent) parseFunctions(config *Config) error {
 		return fmt.Errorf("failed to parse file: %w", err)
 	}
 
-	// take the system prompt from tools.go package doc
-	if node.Doc == nil {
-		return fmt.Errorf("missing package godoc on tool source file")
-	}
-	a.q.Messages = []llm.Message{
-		{Role: "system", Content: node.Doc.Text()},
-	}
-
 	for _, decl := range node.Decls {
 		fd, ok := decl.(*ast.FuncDecl)
 		if !ok || !fd.Name.IsExported() {
@@ -57,19 +49,18 @@ func (a *Agent) parseFunctions(config *Config) error {
 		}
 
 		for _, field := range fd.Type.Params.List {
-			if len(field.Names) != 1 {
-				continue
-			}
-			pName := field.Names[0].Name
-			paramName := toLowerSnakeCase(pName)
+			for _, name := range field.Names {
+				pName := name.Name
+				paramName := toLowerSnakeCase(pName)
 
-			doc = replaceWholeWord(doc, pName, paramName)
+				doc = replaceWholeWord(doc, pName, paramName)
 
-			params.Properties[paramName] = llm.Property{
-				Type:        fmt.Sprintf("%v", field.Type),
-				Description: paramName,
+				params.Properties[paramName] = llm.Property{
+					Type:        fmt.Sprintf("%v", field.Type),
+					Description: paramName,
+				}
+				params.Required = append(params.Required, paramName)
 			}
-			params.Required = append(params.Required, paramName)
 		}
 
 		doc = replaceWholeWord(doc, tName, toolName)
