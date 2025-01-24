@@ -19,7 +19,7 @@ func main() {
 
 	url := "http://localhost:11434/v1"
 	embeddingsModel := "mxbai-embed-large"
-	model := "qwen2.5:7b"
+	model := "qwen2.5:14b"
 
 	elasticStore := embeddings.ElasticsearchStore{}
 	err = elasticStore.Initialize(

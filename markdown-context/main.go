@@ -14,10 +14,10 @@ var llamaServer = struct {
 	url, model string
 }{"http://localhost:8080/v1", "ignored"}
 
-// ollama serve; ollama pull qwen2.5:7b-instruct
+// ollama serve; ollama pull qwen2.5:14b
 var ollama = struct {
 	url, model string
-}{"http://localhost:11434/v1", "qwen2.5:7b-instruct"}
+}{"http://localhost:11434/v1", "qwen2.5:14b"}
 
 func main() {
 	url := ollama.url

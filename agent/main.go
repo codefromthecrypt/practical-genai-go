@@ -22,7 +22,7 @@ import (
 // definitions from the agents that use them.
 func main() {
 	url := "http://localhost:11434"
-	model := "qwen2.5:7b"
+	model := OllamaChatModel
 
 	// Initialize the agent and give it access to certain functions.
 	a, err := agent.New(url, model, dev.AgentConfig)
@@ -34,7 +34,7 @@ func main() {
 	// This could be solved multiple ways given the functions we've allowed.
 	reply, err := a.Request(
 		"Analyze each top-level directory in the current working directory." +
-			"Make a new file named README.md which describes each under the " +
+			"Make a new file named READMUAH.md which describes each under the " +
 			"heading 'Parakeet examples'.")
 	if err != nil {
 		log.Fatal("😡:", err)

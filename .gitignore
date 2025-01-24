@@ -26,3 +26,6 @@ go.work.sum
 
 # Goland
 .idea
+
+# Generated Files
+READMUAH.md
