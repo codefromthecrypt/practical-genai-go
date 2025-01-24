@@ -75,7 +75,7 @@ go run markdown-rag/use-embeddings/main.go
 ```
 
 ---
-[talk]: https://speakerdeck.com/adriancole/practical-genai-with-go-gophercon-singapore
+[talk]: https://speakerdeck.com/adriancole/practical-genai-with-go-gophercon-singapore-3e5a0b44-b096-4001-8a57-a2475ad280d1
 [ollama]: https://github.com/ollama/ollama
 [parakeet]: https://github.com/parakeet-nest/parakeet
 [parakeet-examples]: https://github.com/parakeet-nest/parakeet/tree/main/examples
