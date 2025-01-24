@@ -22,7 +22,7 @@ import (
 // definitions from the agents that use them.
 func main() {
 	url := "http://localhost:11434"
-	model := OllamaChatModel
+	model := "qwen2.5:14b"
 
 	// Initialize the agent and give it access to certain functions.
 	a, err := agent.New(url, model, dev.AgentConfig)
